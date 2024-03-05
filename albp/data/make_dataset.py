@@ -2,6 +2,7 @@
 import click
 import logging
 from pathlib import Path
+from multiprocessing import Pool, cpu_count
 from dotenv import find_dotenv, load_dotenv
 
 from albp.data.salbp import SALBP
@@ -40,14 +41,19 @@ def main(force):
     logger.info(f"Start writing models in {dataset}.")
     problems = Path(RAW_DATA, dataset)
     problem_sizes = ['20', '50', '50-permuted', '100', '1000']
+    data = []
     for size in problem_sizes:
         ppath = Path(problems, size)
         for i in ppath.glob('*.alb'):
             instance = i.name.replace('.alb', '')
             path = Path('lp', dataset, size, instance + '.alb')
             if (path.exists() and force) or not path.exists():
-                generate_model(dataset=dataset, instance=instance,
-                                size=size, cycle_time=None)
+                data.append(
+                    (dataset, instance, size, None)
+                )
+
+    with Pool(processes=cpu_count()) as p:
+        p.starmap(generate_model, data)
 
 def generate_model(
         dataset: str,
