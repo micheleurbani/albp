@@ -11,7 +11,10 @@ from albp.data.salbp import SALBP
 logger = logging.getLogger(__name__)
 
 RAW_DATA = Path('data', 'raw', 'albp-datasets')
+RAW_DATA.mkdir(parents=True, exist_ok=True)
+
 PROCESSED_DATA = Path('data', 'processed', 'albp-datasets')
+PROCESSED_DATA.mkdir(parents=True, exist_ok=True)
 
 
 @click.command()
