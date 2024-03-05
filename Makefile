@@ -32,6 +32,7 @@ endif
 
 ## Make Dataset
 data:
+	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
 	$(PYTHON_INTERPRETER) albp/data/make_dataset.py
 
 ## Delete all compiled Python files
