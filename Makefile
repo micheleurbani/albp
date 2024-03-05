@@ -14,6 +14,9 @@ ifneq ($(wildcard .env),)
 	export
 endif
 
+INCLUDE_DIR := $($(PYTHON_INTERPRETER) -c "import sysconfig; print(sysconfig.get_path('include'))")
+LIBRARY := $($(PYTHON_INTERPRETER) -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))")
+
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
@@ -21,8 +24,9 @@ endif
 ## Install Python Dependencies
 requirements: test_environment
 ifeq ($(ENVIRONMENT), PRODUCTION)
-	source venv/bin/activate && \
-	python3 -m pip install -r requirements.txt
+	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
+	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt && \
+	CMAKE_ARGS="-DSCIP_DIR=$(SCIP_DIR) -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON" $(PYTHON_INTERPRETER) -m pip install ecole
 else ifeq ($(ENVIRONMENT), DEVELOPMENT)
 endif
 
@@ -42,12 +46,12 @@ lint:
 ## Set up python interpreter environment
 create_environment:
 ifeq ($(ENVIRONMENT), PRODUCTION)
-ifeq ($(shell [ ! -d "venv" ]),)
+ifeq ($(shell [ ! -d "myenv" ]),)
 	@echo ">>> Installing production environment if not already installed."
 	/home/$(USER)/Python-3.9.18/python -m ensurepip --upgrade
-	/home/$(USER)/Python-3.9.18/python -m venv venv
-	export PYTHONPATH=$(PWD)/venv/lib/python3.9/site-packages:$(PYTHONPATH)
-	source venv/bin/activate && \
+	/home/$(USER)/Python-3.9.18/python -m venv myenv
+	export PYTHONPATH=$(PWD)/myenv/lib/python3.9/site-packages:$(PYTHONPATH)
+	source myenv/bin/activate && \
 	python3 -m pip install --upgrade pip
 	@echo ">>> New virtualenv created."
 endif
