@@ -35,6 +35,10 @@ data:
 	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
 	$(PYTHON_INTERPRETER) albp/data/make_dataset.py
 
+features:
+	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
+	$(PYTHON_INTERPRETER) -m albp.data.features.build_features gasse --source data/processed/albp-datasets
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
