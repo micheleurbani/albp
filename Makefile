@@ -32,12 +32,20 @@ endif
 
 ## Make Dataset
 data:
+ifeq ($(ENVIRONMENT), PRODUCTION)
 	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
 	$(PYTHON_INTERPRETER) albp/data/make_dataset.py
+else ifeq ($(ENVIRONMENT), DEVELOPMENT)
+	$(PYTHON_INTERPRETER) -m albp.data.make_dataset gasse
+endif
 
 features:
+ifeq ($(ENVIRONMENT), PRODUCTION)
 	export PYTHONPATH=$(PROJECT_DIR)/myenv/lib/python3.9/site-packages:$(PYTHONPATH) && \
 	$(PYTHON_INTERPRETER) -m albp.data.features.build_features gasse --source data/processed/albp-datasets
+else ifeq ($(ENVIRONMENT), DEVELOPMENT)
+	$(PYTHON_INTERPRETER) -m albp.features.build_features gasse -c albp/features/config.yml
+endif
 
 ## Delete all compiled Python files
 clean:
