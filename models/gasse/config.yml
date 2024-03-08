@@ -1,0 +1,5 @@
+samples_folder: 'data/interim/gasse/2024-03-08'
+data_max_samples: 1000
+nb_eval_instances: 20
+learning_rate: 0.001
+nb_epochs: 50
