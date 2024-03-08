@@ -98,7 +98,6 @@ def gasse(config_path: str):
     sample_files = [str(p) for p in Path(samples_folder).glob("*.pkl")]
     train_files = sample_files[: int(0.8 * len(sample_files))]
     valid_files = sample_files[int(0.8 * len(sample_files)) :]
-    print(sample_files)
 
     train_data = GraphDataset(train_files)
     train_loader = torch_geometric.loader.DataLoader(
