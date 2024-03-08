@@ -1,0 +1,6 @@
+# first-level keys map to the model name
+gasse:
+  source: 'data/processed/albp-datasets'
+  destination:
+  max_samples: 1000
+  seed: 3467

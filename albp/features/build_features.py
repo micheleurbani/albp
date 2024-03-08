@@ -1,4 +1,5 @@
 import gzip
+import yaml
 import ecole
 import click
 import pickle
@@ -14,16 +15,15 @@ def cli():
     pass
 
 @cli.command()
-@click.option('--source',
-              help='The folder from which to read instances.')
-@click.option('--destination',
-              help='The destination folder where to store data.')
-@click.option('--data_max_samples', default=10000,
-              help='The number of samples to be collected.')
-@click.option('-s', '--seed', default=3478,
-              help='Seed value for reproducibility of the experiment.')
-def gasse(source: str, destination: str, data_max_samples: int = 10000,
-          seed: int = 1234):
+@click.option('-c', '--config_path', help='Path to the configuration file.')
+def gasse(config_path: str):
+
+    with open(Path(config_path), 'r') as f:
+        config = yaml.safe_load(f)['gasse']
+    source = config['source']
+    destination = config['destination']
+    seed = config['seed']
+    data_max_samples = config['max_samples']
 
     source = Path(source)
     if destination is None:
