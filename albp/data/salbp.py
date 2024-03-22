@@ -1,8 +1,7 @@
 import logging
 import numpy as np
 from pathlib import Path
-from ortools.linear_solver import pywraplp
-
+from pyscipopt import Model, quicksum
 
 from albp.data.problem import Problem
 from albp.data.utils import transitive_closure
@@ -70,8 +69,9 @@ class SALBP(Problem):
         c = self.c
         P = self.P
         # Create the mip solver with the SCIP backend.
-        solver = pywraplp.Solver.CreateSolver(self.solver_id)
-        if not solver:
+        ins = self.params['instance'].replace('.IN2', '').replace('.alb', '')
+        model = Model(f"{self.params['dataset']}_{ins}_{c}")
+        if not model:
             return
         #TODO: think about the implementation of bounds, the assumption M = N is not efficient
         M = self.N
@@ -104,23 +104,25 @@ class SALBP(Problem):
         x = {}
         for i in range(N):
             for k in np.arange(N)[FS[i]]:
-                x[i, k] = solver.IntVar(0, 1, "x_%s_%s" % (i, k))
+                x[i, k] = model.addVar(vtype="B", name="x_%s_%s" % (i, k))
 
         y = {}
         for k in range(M):
-            y[k] = solver.IntVar(0, 1, "y_%s" % k)
+            y[k] = model.addVar(vtype="B", name="y_%s" % k)
 
         ###############
         # CONSRTAINTS #
         ###############
         # a product must be assigned to a machine
         for i in range(N):
-            solver.Add(solver.Sum([x[i, k] for k in np.arange(N)[FS[i]]]) == 1)
+            model.addCons(
+                quicksum([x[i, k] for k in np.arange(N)[FS[i]]]) == 1
+            )
 
         # cycle time must be respected
         for k in range(M):
-            solver.Add(
-                solver.Sum(
+            model.addCons(
+                quicksum(
                     [t[i] * x[i, k] for i in np.arange(N)[FS[i]] if FS[i, k]]
                 ) <= c * y[k]
             )
@@ -128,15 +130,29 @@ class SALBP(Problem):
         # precedence constraints
         for i in range(N):
             for j in np.arange(N)[P[i]]:
-                solver.Add(
-                    solver.Sum([k * x[j, k] for k in np.arange(N)[FS[j]]]) <=
-                    solver.Sum([k * x[i, k] for k in np.arange(N)[FS[i]]])
+                model.addCons(
+                    quicksum([k * x[j, k] for k in np.arange(N)[FS[j]]]) <=
+                    quicksum([k * x[i, k] for k in np.arange(N)[FS[i]]])
                 )
 
         # write objective function
-        solver.Minimize(solver.Sum([y[k] for k in range(M)]))
+        model.setObjective(quicksum([y[k] for k in range(M)]), "minimize")
 
-        return solver
+        # collect problem data to a dictionary and append them to the model
+        model.data = {
+            'N': self.N,
+            'C': self.c,
+            't': self.t,
+            'P': self.P,
+            'Px': Px,
+            'Fx': Fx,
+            'tau': tau,
+            'E': E,
+            'L': L,
+            'FS': FS
+        }
+
+        return model
 
     def _write_model(self, **kwargs):
         if int(self.type) == 1:

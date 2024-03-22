@@ -1,7 +1,7 @@
 import abc
 import numpy as np
 from pathlib import Path
-from ortools.linear_solver import pywraplp
+import pyscipopt
 
 
 class Problem:
@@ -98,7 +98,7 @@ class Problem:
                     break
                 row = f.readline()
 
-    def write_model(self) -> pywraplp.Solver.CreateSolver:
+    def write_model(self) -> pyscipopt.Model:
         self._retrieve_data()
         model = self._write_model()
         return model
