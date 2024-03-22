@@ -1,0 +1,19 @@
+name: albp
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - poetry
+  - libarchive
+  - libarchive-minimal-static
+  - gcg
+  - papilo
+  - soplex
+  - zimpl
+  - scip
+  - pyscipopt
+  - ecole
+  - ipykernel
+  - click
+  - python-dotenv
+  - pyarrow
