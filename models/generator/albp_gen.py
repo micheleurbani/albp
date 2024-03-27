@@ -70,12 +70,7 @@ class ALBPGenerator:
         # create scip model
         model = Model()
         model.readProblem(str(f_path))
-        # retrieve problem data
-        with gzip.open(d_path, "rb") as f:
-            data = pickle.load(f)
-        # append data to the model
-        model.data = data
-        return model
+        return ecole.scip.Model.from_pyscipopt(model)
 
     def __iter__(self) -> Iterator[ecole.scip.Model]:
         """Return itself as an iterator."""

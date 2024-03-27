@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from pathlib import Path
-from pyscipopt import Model
+from ecole.scip import Model
 
 from models.generator.albp_gen import ALBPGenerator
 
