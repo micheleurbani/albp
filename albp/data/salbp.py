@@ -24,44 +24,18 @@ class SALBP(Problem):
 
     def _retrieve_data(self) -> None:
         "There are two available data sets, i.e., SALBP-1993 and SALBP-2013."
-        if self.params['dataset'] == 'SALBP-1993':
-            if '.IN' not in self.params['instance']:
-                self.params['instance'] += '.IN2'
-            path = Path(self.problem_folder, self.params['instance'])
-            with open(path, 'r') as f:
-                self.N = int(f.readline())
-                self.t = np.array([int(f.readline().strip())
-                                   for _ in range(self.N)])
-                # define precedence lists
-                self.P = np.zeros((self.N, self.N), dtype=bool)
-                for p in f.readlines():
-                    if p.strip():
-                        p = tuple(p.strip().split(','))
-                        if p == ('-1', '-1'):
-                            break
-                        self.P[int(p[1]) - 1, int(p[0]) - 1] = 1
-                    else: break
-
-            # try to retrieve the cycle time from params
-            if self.params.get('c', None) is None:
-                logger.debug("Setting cycle time to max task time duration.")
-                self.c = np.max(self.t)
-            else:
-                self.c = self.params['c']
-
-        elif self.params['dataset'] == 'SALBP-2013':
+        if self.params['dataset'] == 'SALBP-2013':
             # check that the size of the problem has been specified
             if self.params.get('size', None) is None:
                 raise ValueError('The problem size must be specified for ' +
                                  'the dataset `SALBP-2013`.')
 
-            if '.alb' not in self.params['instance']:
-                self.params['instance'] += '.alb'
-            self.read_alb(
-                Path(self.problem_folder, self.params['instance'])
-            )
-        else:
-            raise ValueError('Check dataset name.')
+        if '.alb' not in self.params['instance']:
+            self.params['instance'] += '.alb'
+
+        self.read_alb(
+            Path(self.problem_folder, self.params['instance'])
+        )
 
     def salbp1(self, **kwargs):
         N = self.N

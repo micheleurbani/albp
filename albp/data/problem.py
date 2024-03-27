@@ -7,7 +7,7 @@ import pyscipopt
 class Problem:
 
     def __init__(self, params: dict, problem_folder: str,
-                 model_folder: str, solver_id: str = 'SCIP') -> None:
+                 model_folder: str) -> None:
         """
         Parameters
         ----------
@@ -39,7 +39,6 @@ class Problem:
         self.equipement = None  # equipments per task
 
         self.params = params
-        self.solver_id = solver_id
 
         if params.get('dataset', None) is None:
             raise ValueError('The dataset name is missing and it must be ' +
@@ -58,7 +57,6 @@ class Problem:
         proposed for the data sets found in
         [assembly-line-balancing.de](https://assembly-line-balancing.de/).
         """
-        data = {}
         with open(path, "r") as f:
             row = f.readline()
             while row:

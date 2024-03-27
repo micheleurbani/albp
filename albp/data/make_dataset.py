@@ -35,7 +35,8 @@ def main(force, problem):
 
     Check the presence of all MILP instances, and, in case they are missing, it
     runs data processing scripts to turn raw data from (../raw/albp-datasets)
-    into cleaned data ready to be analyzed (saved in ../processed/lp).
+    into cleaned data ready to be analyzed (saved in
+    ../processed/albp-datasets).
 
     """
     # check problem name for typos
@@ -47,8 +48,8 @@ def main(force, problem):
         dataset = 'SALBP-1993'
         logger.info(f"Start writing models in {dataset}.")
         problems = Path(RAW_DATA, dataset)
-        for i in problems.glob('*.IN2'):
-            instance = i.name.replace('.IN2', '')
+        for i in problems.glob('*.alb'):
+            instance = i.name.replace('.alb', '')
             path = Path(PROCESSED_DATA, dataset, instance + '.lp')
             if (path.exists() and force) or not path.exists():
                 data.append((dataset, instance, None, None))
