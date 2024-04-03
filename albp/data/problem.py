@@ -64,8 +64,10 @@ class Problem:
                     self.N = int(f.readline().strip())
                 elif "<cycle time>" in row:
                     self.c = int(f.readline().strip())
+                elif "<number of stations>" in row:
+                    raise NotImplementedError
                 elif "<order strength>" in row:
-                    pass
+                    raise NotImplementedError
                 elif "<task times>" in row:
                     self.t = np.array([int(f.readline().strip().split(" ")[-1])
                                        for _ in range(self.N)])
@@ -76,6 +78,8 @@ class Problem:
                             p = tuple(p.strip().split(","))
                             self.P[int(p[0]) - 1, int(p[-1]) - 1] = 1
                         else: break
+                elif "<sequence dependent time increments>" in row:
+                    raise NotImplementedError
                 elif "<linked tasks>" in row:
                     self.LT = np.zeros((self.N, self.N), dtype=bool)
                     for p in f.readlines():
@@ -83,7 +87,19 @@ class Problem:
                             p = tuple(p.strip().split(","))
                             self.LT[int(p[-1]) - 1, int(p[0]) - 1] = 1
                         else: break
-
+                elif "<total station cost>" in row:
+                    raise NotImplementedError
+                elif "<station cost per unit>" in row:
+                    raise NotImplementedError
+                elif "<total task cost>" in row:
+                    raise NotImplementedError
+                elif " <task cost per unit>" in row:
+                    raise NotImplementedError
+                # Parallel stations are duplicates of some serial station such
+                # that the local cycle time is a multiple of the global cycle
+                # time.
+                # The maximal number of times a station can be installed in
+                # parallel
                 elif "<maximum degree of parallelism>" in row:
                     self.max_parallelism = int(f.readline().strip())
                 elif "<number of equipments>" in row:
@@ -92,6 +108,14 @@ class Problem:
                     self.equipment = \
                         np.array([int(f.readline().strip().split(" ")[-1])
                                   for _ in range(self.N)])
+                elif "<number of task attributes>" in row:
+                    raise NotImplementedError
+                elif "<task attribute values>" in row:
+                    raise NotImplementedError
+                elif "<attribute bounds per station>" in row:
+                    raise NotImplementedError
+                elif "<incompatible tasks>" in row:
+                    raise NotImplementedError
                 elif "<end>" in row:
                     break
                 row = f.readline()
