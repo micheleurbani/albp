@@ -2,7 +2,7 @@ name: albp
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python=3.11
   - poetry
   - libarchive
   - libarchive-minimal-static
@@ -15,5 +15,9 @@ dependencies:
   - ecole
   - ipykernel
   - click
+  - pandas
   - python-dotenv
   - pyarrow
+  - scikit-learn
+  - nvidia::cuda
+  - pytorch::pytorch
