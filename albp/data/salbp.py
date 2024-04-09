@@ -89,16 +89,16 @@ class SALBP(Problem):
         ###############
         # a product must be assigned to a machine
         for i in range(N):
-            model.addCons(
-                quicksum([x[i, k] for k in np.arange(N)[FS[i]]]) == 1
-            )
+            model.addConsSOS1([x[i, k] for k in np.arange(N)[FS[i]]],
+                              name="task_assignment_%d" % i)
 
         # cycle time must be respected
         for k in range(M):
             model.addCons(
                 quicksum(
                     [t[i] * x[i, k] for i in np.arange(N)[FS[i]] if FS[i, k]]
-                ) <= c * y[k]
+                ) <= c * y[k],
+                name="cycle_time_station_%d" % k
             )
 
         # precedence constraints
@@ -106,7 +106,8 @@ class SALBP(Problem):
             for j in np.arange(N)[P[i]]:
                 model.addCons(
                     quicksum([k * x[j, k] for k in np.arange(N)[FS[j]]]) <=
-                    quicksum([k * x[i, k] for k in np.arange(N)[FS[i]]])
+                    quicksum([k * x[i, k] for k in np.arange(N)[FS[i]]]),
+                    name="precedence_%d_%d" % (i, j)
                 )
 
         # write objective function
