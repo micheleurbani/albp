@@ -51,7 +51,20 @@ Project Organization
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
+Get started
+-----------
 
---------
+Installing the project through the conda environment is suggested.
+To initialize the conda environment
+
+    ```bash
+    conda env create -f environment.yml
+    ```
+
+Alternatively, the invironment can be installed manually via `pip` and command
+line. A working installation of SCIP is required and it must be available
+through command line.
+
+----------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
