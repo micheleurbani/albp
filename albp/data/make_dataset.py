@@ -59,7 +59,13 @@ def main(force, problem):
         dataset = 'SALBP-2013'
         logger.info(f"Start writing models in {dataset}.")
         problems = Path(RAW_DATA, dataset)
-        problem_sizes = ['20', '50', '50-permuted', '100', '1000']
+        problem_sizes = [
+            '20',
+            '50',
+            '50-permuted',
+            '100',
+            '1000'
+        ]
         for size in problem_sizes:
             ppath = Path(problems, size)
             for i in ppath.glob('*.alb'):
