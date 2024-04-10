@@ -67,7 +67,7 @@ class Problem:
                 elif "<number of stations>" in row:
                     raise NotImplementedError
                 elif "<order strength>" in row:
-                    self.OS = float(f.readline().strip())
+                    self.OS = float(f.readline().strip().replace(",", "."))
                 elif "<task times>" in row:
                     self.t = np.array([int(f.readline().strip().split(" ")[-1])
                                        for _ in range(self.N)])
