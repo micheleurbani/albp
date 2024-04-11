@@ -63,7 +63,8 @@ class Problem:
                 if "<number of tasks>" in row:
                     self.N = int(f.readline().strip())
                 elif "<cycle time>" in row:
-                    self.c = int(f.readline().strip())
+                    if not self.c:
+                        self.c = int(f.readline().strip())
                 elif "<number of stations>" in row:
                     raise NotImplementedError
                 elif "<order strength>" in row:
