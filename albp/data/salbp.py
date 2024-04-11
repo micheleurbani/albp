@@ -111,6 +111,10 @@ class SALBP(Problem):
                     name="precedence_%d_%d" % (i, j)
                 )
 
+        # SOS1 constraints
+        for i in range(N):
+            model.addConsSOS1([x[i, k] for k in np.arange(N)[FS[i]]])
+
         # write objective function
         model.setObjective(quicksum([y[k] for k in range(M)]), "minimize")
 
