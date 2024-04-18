@@ -1,10 +1,13 @@
-import gzip
 import ecole
-import pickle
 import numpy as np
 from pyscipopt import Model
 from pathlib import Path
 from typing import Iterator
+from albp.data.reader import ALBReader
+
+
+FILE_FORMAT = "alb"
+
 
 class ALBPGenerator:
 
@@ -41,10 +44,9 @@ class ALBPGenerator:
                 different order) after all files have been sampled.
         """
         self.directory = Path(directory)
-        # retrieve only lp files so far
-        self.file_gen = self.directory.glob("**/*.lp")
-        if not recursive:
-            self.file_gen = self.directory.glob("*.lp")
+        self.file_gen = self.directory.glob("*.alb")
+        if recursive:
+            self.file_gen = self.directory.glob("**/*.alb")
         self.file_gen = list(self.file_gen)
         self.rng = rng
         self.mask = np.ones(len(self.file_gen), dtype=bool)
@@ -65,10 +67,11 @@ class ALBPGenerator:
             self.mask[i] = 0
         # file path of the next model to be load
         f_path = self.file_gen[i]
-        # data path of the next model to be load
-        d_path = f_path.parent.joinpath(f_path.stem)
         # create scip model
         model = Model()
+        reader = ALBReader()
+        model.includeReader(reader, "albpreader",
+                            "PyReader for ALB problems.", "alb")
         model.readProblem(str(f_path))
         return ecole.scip.Model.from_pyscipopt(model)
 

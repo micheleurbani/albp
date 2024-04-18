@@ -9,7 +9,7 @@ from models.generator.albp_gen import ALBPGenerator
 class TestALBPGenerator(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.path = Path("data", "processed")
+        self.path = Path("data", "raw")
 
     def test_replace(self):
         self.gen = ALBPGenerator(
