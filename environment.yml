@@ -18,6 +18,6 @@ dependencies:
   - pandas
   - python-dotenv
   - pyarrow
+  - deap
   - scikit-learn
-  - nvidia::cuda
-  - pytorch::pytorch
+  - openpyxl

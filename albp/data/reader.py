@@ -59,8 +59,10 @@ class ALBReader(Reader):
                     problem.OS = float(f.readline().strip().replace(",", "."))
                     problem.sections.append(SECTION_ORDER_STRENGTH)
                 elif SECTION_TASK_TIMES in row:
-                    problem.t = np.array([int(f.readline().strip().split(" ")[-1])
-                                        for _ in range(problem.N)])
+                    problem.t = np.array(
+                        [int(f.readline().strip().split(" ")[-1])
+                         for _ in range(problem.N)]
+                    )
                     problem.sections.append(SECTION_TASK_TIMES)
                 elif SECTION_PRECEDENCES in row:
                     problem.P = np.zeros((problem.N, problem.N), dtype=bool)
@@ -195,6 +197,12 @@ class ALBReader(Reader):
                     ),
                     name="precedence_%d_%d" % (i, j)
                 )
+
+        ########################
+        # OPTIONAL CONSTRAINTS #
+        ########################
+        if SECTION_NUM_STATIONS in problem.sections:
+            pass
 
         # write objective function
         self.model.setObjective(quicksum([y[k] for k in range(M)]), "minimize")
